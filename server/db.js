@@ -1,9 +1,12 @@
-const path = require("path");
 const { PrismaClient } = require("@prisma/client");
-const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
+const { PrismaPg } = require("@prisma/adapter-pg");
 
-const url = process.env.DATABASE_URL || `file:${path.join(__dirname, "..", "prisma", "dev.db")}`;
-const adapter = new PrismaBetterSqlite3({ url });
-const prisma = new PrismaClient({ adapter });
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) throw new Error("DATABASE_URL is required");
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({
+  adapter,
+  log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+});
 
 module.exports = { prisma };
