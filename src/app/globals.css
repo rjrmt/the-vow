@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ========== Theme System: data-theme switching ========== */
+:root,
+[data-theme="light"] {
+  --background: #faf9f7;
+  --foreground: #1a1a1a;
+  --surface: #ffffff;
+  --surface-elevated: #ffffff;
+  --border: #e5e5e5;
+  --primary: #2d4a3e;
+  --primary-foreground: #faf9f7;
+  --accent: #7b9b8a;
+  --accent-muted: #a8c4b8;
+  --success: #2d6a4f;
+  --danger: #c1121f;
+  --warning: #e9c46a;
+  --muted: #6b7280;
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
 }
 
+[data-theme="dark"] {
+  --background: #0f1419;
+  --foreground: #e7e9ea;
+  --surface: #1a1f26;
+  --surface-elevated: #252b33;
+  --border: #38444d;
+  --primary: #7b9b8a;
+  --primary-foreground: #0f1419;
+  --accent: #a8c4b8;
+  --accent-muted: #5a7a6a;
+  --success: #52b788;
+  --danger: #e63946;
+  --warning: #f4a261;
+  --muted: #8b98a5;
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1rem;
+}
+
+[data-theme="blush"] {
+  --background: #fdf2f8;
+  --foreground: #2d1b2e;
+  --surface: #ffffff;
+  --surface-elevated: #fce7f3;
+  --border: #fbcfe8;
+  --primary: #9d174d;
+  --primary-foreground: #fdf2f8;
+  --accent: #ec4899;
+  --accent-muted: #f9a8d4;
+  --success: #be185d;
+  --danger: #dc2626;
+  --warning: #f59e0b;
+  --muted: #831843;
+  --radius: 1rem;
+  --radius-sm: 0.5rem;
+  --radius-lg: 1.25rem;
+}
+
+/* Tailwind v4 theme mapping */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --radius-default: var(--radius);
+  --radius-sm: var(--radius-sm);
+  --radius-lg: var(--radius-lg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Safe area insets for iOS */
+:root {
+  --sat: env(safe-area-inset-top);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100dvh;
+  min-height: 100vh;
+}
+
+/* Remove system font override for theme consistency */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --background: #0f1419;
+    --foreground: #e7e9ea;
+  }
 }

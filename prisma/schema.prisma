@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Session {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  role        String   @default("host")
+  participants String  // JSON array of participant IDs
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  vowThread   VowThread?
+  realtimeState RealtimeState?
+}
+
+model VowThread {
+  id                 String   @id @default(uuid())
+  sessionId          String   @unique
+  session            Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  challengesAccepted String   @default("[]")  // JSON string[]
+  pulseSyncScore     Int      @default(0)
+  memoryTimeline     String   @default("[]")  // JSON { id, order }[]
+  affirmations       String   @default("[]")  // JSON string[]
+  canvasImageURL     String?
+
+  modulesCompleted   String   @default("[]")  // JSON ModuleId[]
+  completedAt        DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RealtimeState {
+  id        String   @id @default(uuid())
+  sessionId String   @unique
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  version   Int      @default(0)
+  payload   String   // JSON snapshot of session state
+  strokes   String   @default("[]")  // JSON array of stroke data for canvas
+  memoryItems String @default("[]")  // JSON MemoryReorderPayload
+
+  updatedAt DateTime @updatedAt
+}

@@ -1,37 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Vow
 
-## Getting Started
+Mobile-first shared mindfulness and commitment app. Create sessions, complete modules (Dopamine Deck, Pulse Sync, Memory Loom, Affirmation Orbit, Co-Op Canvas), and generate a shareable Vow Card.
 
-First, run the development server:
+## Tech Stack
+
+- Next.js 15 App Router, TypeScript, Tailwind v4, Framer Motion
+- Prisma (SQLite dev / PostgreSQL production)
+- WebSocket for realtime sync
+- html-to-image for PNG export
+
+## Local Development
 
 ```bash
+npm install
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable       | Description                          |
+|----------------|--------------------------------------|
+| `DATABASE_URL` | SQLite: `file:./prisma/dev.db` or PostgreSQL connection string |
 
-## Learn More
+## Deploy to Production
 
-To learn more about Next.js, take a look at the following resources:
+**Important:** This app uses a custom Node server with WebSocket. **Vercel does not support custom servers**—use **Railway** or **Render** for full functionality.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Railway (recommended)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push to GitHub
+2. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
+3. Add **PostgreSQL** plugin (or use external DB)
+4. Set `DATABASE_URL` in Variables
+5. Deploy
 
-## Deploy on Vercel
+### Render
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Push to GitHub
+2. Go to [render.com](https://render.com) → New → Web Service
+3. Connect repo, use `render.yaml` settings
+4. Add PostgreSQL database, set `DATABASE_URL`
+5. Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# the-vow
+### Database Setup (Production)
+
+Use **Neon**, **Railway Postgres**, or **Vercel Postgres**. Update `prisma/schema.prisma`:
+
+```prisma
+datasource db {
+  provider = "postgresql"
+}
+```
+
+Then:
+
+```bash
+npx prisma migrate deploy
+```
+
+## Project Structure
+
+See [STRUCTURE.md](./STRUCTURE.md).
